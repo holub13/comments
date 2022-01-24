@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Parcel Sandbox</title>
+    <meta charset="UTF-8" />
+  </head>
+
+  <body>
+    <h1>Добавить комментарий</h1>
+    <form id="form">
+      <span>Ваше имя:</span>
+      <input id="name" type="text" size="40" />
+      <form action="textarea1.php" method="post">
+        <p><span>Комментарий:</span></p>
+        <p>
+          <textarea
+            id="text"
+            placeholder="Напишите здесь какой-нибудь комментарий"
+            rows="10"
+            cols="45"
+            name="text"
+          ></textarea>
+        </p>
+      </form>
+      <p><input id="btn" type="submit" value="Отправить" /></p>
+    </form>
+    <div id="app"></div>
+
+    <script src="src/index.js"></script>
+  </body>
+</html>
