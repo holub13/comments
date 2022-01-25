@@ -3,88 +3,83 @@ import "./styles.css";
 let comment = document.getElementById("text");
 let btn = document.getElementById("btn");
 let name = document.getElementById("name");
-// let arr = [];
-// const storage = {
-//   name: [],
-//   comment: []
-// };
+let pagination = document.getElementById("pagination");
+
 btn.addEventListener("click", (e) => {
   e.preventDefault();
-  // console.log(name.value);
   document.getElementById(
     "app"
   ).innerHTML += `<h2>${name.value}</h2><p>${comment.value}!</p>`;
-  // arr.push(comment.value);
-  // localStorage.setItem("comments", JSON.stringify(arr));
-
-  // storage.name.push(name.value);
-  // storage.comment.push(comment.value);
-  // localStorage.setItem("storage", JSON.stringify(storage));
-
   comment.value = "";
 });
 
-// let com = JSON.parse(localStorage.getItem("comments"));
-// let store = JSON.parse(localStorage.getItem("storage"));
-// if (!localStorage.getItem("comments")) {
-//   localStorage.setItem("comments", JSON.stringify(arr));
-//   localStorage.setItem("storage", JSON.stringify(storage));
-// } else {
-//   com.forEach((item) => {
-//     document.getElementById("app").innerHTML += `<h1>${item}!</h1>`;
-//     // console.log(item);
-//   });
-//   // console.log(store.name);
-
-//   store.name.forEach((item) => {
-//     // document.getElementById("app").innerHTML += `<h1>${item}!</h1>`;
-//     console.log(item);
-//   });
-// }
-
-// console.log(storage);
-
 let url = "https://jordan.ashton.fashion/api/goods/30/comments";
 
-async function getCount(url) {
+async function getData(url) {
   await fetch(url)
     .then((response) => {
       return response.json();
     })
-    .then((data) => {
-      // console.log(data.links);
-      data.links.forEach((item) => {
-        // console.log(item);
-        if (item.active) {
-          fetch(item.url)
-            .then((page) => {
-              return page.json();
-            })
-            .then((item) => {
-              console.log(item.data);
-              item.data.forEach((comment) => {
-                // console.log(comment);
-                document.getElementById(
-                  "app"
-                ).innerHTML += `<h2>${comment.name}</h2><p>${comment.text}!</p>`;
-              });
-            });
-        }
+    .then((json) => {
+      // console.log(json.links);
+      json.links.forEach((item) => {
+        console.log(item);
+        pagination.innerHTML += `<li class="btn prev" value="${item.label}">${item.label}</li>`;
+        document.querySelectorAll("li").forEach((li) => {
+          // console.log(li);
+          li.addEventListener("click", (e) => {
+            // console.log(li.innerHTML);
+            // console.log(item.label);
+            // console.log(e.currentTarget.value);
+            if (li.innerHTML === "« Previous") {
+              console.log("prev");
+            } else if (li.innerHTML === "Next »") {
+              console.log("next");
+            } else {
+              console.log(li.innerHTML);
+              document.getElementById("app").innerHTML = "";
+              showData(li.innerHTML);
+            }
+          });
+        });
       });
+      // console.log(document.querySelectorAll("li"));
+      // json.data.forEach((item) => {
+      //   if (item.active) {
+      //     fetch(item.url)
+      //       .then((page) => {
+      //         return page.json();
+      //       })
+      //       .then((item) => {
+      //         // console.log(item.data);
+      //         item.data.forEach((comment) => {
+      //           // console.log(comment);
+      //           document.getElementById(
+      //             "app"
+      //           ).innerHTML += `<h2>${comment.name}</h2><p>${comment.text}!</p>`;
+      //         });
+      //       });
+      //   }
+      // });
+      // showData();
     });
-
-  //   if (response.ok) {
-  //     let json = await response.json();
-  //     json.links.forEach((item) => {
-  //       console.log(item);
-  //     });
-  //   } else {
-  //     console.log("Ошибка HTTP: " + response.status);
-  //   }
-
-  //     let resp = await fetch(item.url)
-  // let jsonPage = await resp.json()
-  //   }
 }
 
-getCount(url);
+getData(url);
+
+async function showData(num) {
+  await fetch(`https://jordan.ashton.fashion/api/goods/30/comments?page=${num}`)
+    .then((response) => {
+      return response.json();
+    })
+    .then((json) => {
+      console.log(json.data);
+      json.data.forEach((comment) => {
+        // console.log(comment);
+        document.getElementById(
+          "app"
+        ).innerHTML += `<h2>Name: ${comment.name}</h2><p>Comment: ${comment.text}!</p>`;
+      });
+    });
+}
+showData("1");
